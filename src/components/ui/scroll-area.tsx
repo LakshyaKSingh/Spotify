@@ -14,7 +14,8 @@ const ScrollArea = React.forwardRef<
     className={cn("relative overflow-hidden", className)}
     {...props}
   >
-    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit]">
+    {/* Added scrollbar-thin class for custom styling */}
+    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit] scrollbar-thin">
       {children}
     </ScrollAreaPrimitive.Viewport>
     <ScrollBar />
@@ -30,16 +31,16 @@ const ScrollBar = React.forwardRef<
   <ScrollAreaPrimitive.ScrollAreaScrollbar
     ref={ref}
     orientation={orientation}
+    // Removed default styles, relying on globals.css for custom scrollbar
     className={cn(
       "flex touch-none select-none transition-colors",
-      orientation === "vertical" &&
-        "h-full w-2.5 border-l border-l-transparent p-[1px]",
-      orientation === "horizontal" &&
-        "h-2.5 flex-col border-t border-t-transparent p-[1px]",
+      orientation === "vertical" && "w-2 border-l border-l-transparent p-[1px]", // Keep basic structure
+      orientation === "horizontal" && "h-2 flex-col border-t border-t-transparent p-[1px]", // Keep basic structure
       className
     )}
     {...props}
   >
+    {/* Thumb styling will be controlled by globals.css via .scrollbar-thin */}
     <ScrollAreaPrimitive.ScrollAreaThumb className="relative flex-1 rounded-full bg-border" />
   </ScrollAreaPrimitive.ScrollAreaScrollbar>
 ))

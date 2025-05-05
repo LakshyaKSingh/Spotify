@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+const { fontFamily } = require("tailwindcss/defaultTheme") // Import defaultTheme
 
 export default {
     darkMode: ["class"],
@@ -9,6 +10,10 @@ export default {
   ],
   theme: {
   	extend: {
+        fontFamily: { // Add font family extension
+            sans: ["var(--font-geist-sans)", ...fontFamily.sans],
+            mono: ["var(--font-geist-mono)", ...fontFamily.mono],
+        },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -90,5 +95,8 @@ export default {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+   plugins: [
+    require("tailwindcss-animate"),
+    require('tailwind-scrollbar')({ nocompatible: true }), // Add scrollbar plugin
+   ],
 } satisfies Config;
