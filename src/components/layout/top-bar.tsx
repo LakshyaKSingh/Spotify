@@ -21,7 +21,8 @@ export default function TopBar() {
 
   return (
     // Sticky top bar with padding and background, z-index to stay above content
-    <header className="sticky top-0 z-40 flex h-16 items-center gap-4 bg-card/80 backdrop-blur-sm px-4 md:px-6 border-b border-border/60">
+    // Adjusted background to be slightly transparent like Spotify's header when scrolling
+    <header className="sticky top-0 z-40 flex h-16 items-center gap-4 bg-background/80 backdrop-blur-sm px-4 md:px-6 border-b border-border/60">
        {/* Mobile Sidebar Trigger */}
         <Sheet>
             <SheetTrigger asChild>
@@ -31,10 +32,10 @@ export default function TopBar() {
                     className="md:hidden text-muted-foreground hover:text-foreground"
                     aria-label="Open sidebar menu"
                 >
-                    <SpotifyLogo className="h-6 w-6" />
+                    <SpotifyLogo className="h-6 w-6 text-foreground" /> {/* Ensure logo uses foreground color */}
                 </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="p-0 w-64 bg-sidebar text-sidebar-foreground border-r-0">
+            <SheetContent side="left" className="p-0 w-72 bg-sidebar text-sidebar-foreground border-r-0"> {/* Slightly wider mobile sidebar */}
                 {/* Render SidebarNav inside the sheet for mobile */}
                 <SidebarNav />
             </SheetContent>
@@ -46,20 +47,22 @@ export default function TopBar() {
         <Button
           variant="ghost"
           size="icon"
-          className="bg-black/40 text-muted-foreground hover:text-foreground rounded-full w-8 h-8"
+          className="bg-black/40 text-muted-foreground hover:text-foreground rounded-full w-8 h-8 disabled:opacity-50" // Added disabled state
           onClick={handleBack}
           aria-label="Go back"
+          // disabled={!router.canGoBack()} // Add logic if using a router with history tracking
         >
-          <ChevronLeft size={20} />
+          <ChevronLeft size={22} /> {/* Slightly larger icon */}
         </Button>
         <Button
           variant="ghost"
           size="icon"
-          className="bg-black/40 text-muted-foreground hover:text-foreground rounded-full w-8 h-8"
+          className="bg-black/40 text-muted-foreground hover:text-foreground rounded-full w-8 h-8 disabled:opacity-50" // Added disabled state
           onClick={handleForward}
           aria-label="Go forward"
+           // disabled={!router.canGoForward()} // Add logic if using a router with history tracking
         >
-          <ChevronRight size={20} />
+          <ChevronRight size={22} /> {/* Slightly larger icon */}
         </Button>
       </div>
 
@@ -70,31 +73,32 @@ export default function TopBar() {
           <Input
             type="search"
             placeholder="What do you want to play?" // Updated placeholder
-            className="pl-10 w-full bg-secondary border-transparent rounded-full h-10 text-sm focus:ring-primary focus:border-primary placeholder:text-muted-foreground focus:bg-card" // Adjusted styles
+            className="pl-10 w-full bg-secondary border-transparent rounded-full h-10 text-sm focus:ring-1 focus:ring-ring focus:border-transparent placeholder:text-muted-foreground focus:bg-card" // Adjusted styles for focus, border, bg
             aria-label="Search music"
           />
+           {/* Optional: Add a clear button or other icons inside the input if needed */}
         </div>
       )}
 
       {/* Spacer to push auth buttons to the right */}
       <div className="flex-1"></div>
 
-      {/* Auth/Account Buttons */}
+      {/* Right Side Links & Auth Buttons */}
       <div className="flex items-center gap-2">
-          {/* Premium Link (Optional) */}
-         {/* <Button variant="ghost" className="hidden sm:inline-flex text-muted-foreground hover:text-foreground hover:scale-105 font-bold text-sm px-4 py-2">
+          {/* Premium Link */}
+         <Button variant="ghost" className="hidden lg:inline-flex text-muted-foreground hover:text-foreground hover:scale-105 font-bold text-sm px-4 py-2">
              Premium
-         </Button> */}
-         {/* Support Link (Optional) */}
-         {/* <Button variant="ghost" className="hidden sm:inline-flex text-muted-foreground hover:text-foreground hover:scale-105 font-bold text-sm px-4 py-2">
+         </Button>
+         {/* Support Link */}
+         <Button variant="ghost" className="hidden lg:inline-flex text-muted-foreground hover:text-foreground hover:scale-105 font-bold text-sm px-4 py-2">
              Support
-         </Button> */}
-         {/* Download Link (Optional) */}
+         </Button>
+         {/* Download Link */}
          <Button variant="ghost" className="hidden sm:inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground hover:scale-105 font-bold text-sm px-4 py-2">
-             <Download size={18} />
+             <Download size={18} strokeWidth={2.5}/> {/* Thicker icon */}
              Install App
          </Button>
-         {/* Separator (Optional) */}
+         {/* Separator */}
          <div className="hidden sm:block h-6 w-px bg-muted-foreground/50 mx-2"></div>
 
          {/* Sign Up */}
@@ -102,11 +106,11 @@ export default function TopBar() {
              Sign up
          </Button>
          {/* Log In */}
-         <Button className="bg-white text-black hover:scale-105 font-bold text-sm px-8 py-2 rounded-full shadow-sm hover:bg-gray-100">
+         <Button className="bg-white text-black hover:scale-[1.04] font-bold text-sm px-8 py-2 rounded-full shadow-sm hover:bg-gray-100 transition-transform duration-75">
              Log in
          </Button>
-         {/* User Avatar (if logged in) */}
-         {/* <Button variant="ghost" size="icon" className="bg-black/40 rounded-full w-8 h-8">
+         {/* User Avatar (Example for logged in state) */}
+         {/* <Button variant="ghost" size="icon" className="bg-muted rounded-full w-8 h-8">
              <User size={18} />
          </Button> */}
       </div>
