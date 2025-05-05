@@ -1,10 +1,11 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Play, Pause, SkipForward, SkipBack, Shuffle, Repeat, Heart, Mic2, ListMusic, Laptop2, Volume2, VolumeX, Maximize2 } from 'lucide-react'; // Added more icons
 import { Slider } from "@/components/ui/slider";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button"; // Import variants
 import { cn } from '@/lib/utils';
 
 // Dummy data for current song (replace with actual state management)
@@ -24,9 +25,19 @@ export default function AudioPlayer() {
   const [isLiked, setIsLiked] = useState(currentSong.isLiked);
   const [volume, setVolume] = useState(70); // Volume percentage
   const [isMuted, setIsMuted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false); // State to track client-side mount
+
+  // Set isMounted to true only on the client-side after the component mounts
+  useEffect(() => {
+      setIsMounted(true);
+  }, []);
+
 
   // Simulate song progress
   useEffect(() => {
+    // Only run interval logic on the client
+    if (!isMounted) return;
+
     let interval: NodeJS.Timeout | null = null;
     if (isPlaying) {
       interval = setInterval(() => {
@@ -51,7 +62,7 @@ export default function AudioPlayer() {
         clearInterval(interval);
       }
     };
-  }, [isPlaying, currentSong.duration, isRepeat]); // Add isRepeat dependency
+  }, [isPlaying, currentSong.duration, isRepeat, isMounted]); // Add isMounted dependency
 
   const togglePlayPause = () => {
     // If song ended and play is pressed, restart
@@ -71,6 +82,8 @@ export default function AudioPlayer() {
   };
 
   const formatTime = (time: number) => {
+    // Return placeholder or null if not mounted to avoid hydration mismatch
+    if (!isMounted) return "--:--";
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60).toString().padStart(2, '0');
     return `${minutes}:${seconds}`;
@@ -88,7 +101,52 @@ export default function AudioPlayer() {
       // Add logic here to set the actual audio volume
   };
 
-  const VolumeIcon = isMuted || volume === 0 ? VolumeX : Volume2;
+  // Determine VolumeIcon only on the client
+  const VolumeIcon = isMounted ? (isMuted || volume === 0 ? VolumeX : Volume2) : Volume2; // Default to Volume2 on server
+
+  // Render null or a skeleton during SSR / pre-hydration if client-specific state is needed immediately
+  if (!isMounted) {
+       return (
+            <footer className="fixed bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-border px-4 py-2 z-50 h-[88px]">
+                {/* Optional: Add a simple loading skeleton here */}
+                <div className="animate-pulse flex items-center justify-between h-full">
+                     <div className="flex items-center gap-3 w-[30%]">
+                         <div className="w-14 h-14 rounded bg-muted"></div>
+                         <div className="space-y-2">
+                             <div className="h-4 bg-muted rounded w-24"></div>
+                             <div className="h-3 bg-muted rounded w-16"></div>
+                         </div>
+                         <div className="w-8 h-8 rounded-full bg-muted ml-3"></div>
+                     </div>
+                     <div className="flex flex-col items-center gap-1 flex-grow w-[40%] max-w-2xl">
+                         <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 rounded-full bg-muted"></div>
+                            <div className="w-8 h-8 rounded-full bg-muted"></div>
+                            <div className="w-9 h-9 rounded-full bg-muted"></div>
+                            <div className="w-8 h-8 rounded-full bg-muted"></div>
+                            <div className="w-8 h-8 rounded-full bg-muted"></div>
+                         </div>
+                         <div className="flex items-center gap-2 w-full">
+                             <div className="h-2 bg-muted rounded w-10"></div>
+                             <div className="h-1 bg-muted rounded flex-grow"></div>
+                             <div className="h-2 bg-muted rounded w-10"></div>
+                         </div>
+                     </div>
+                     <div className="flex items-center gap-2 w-[30%] justify-end">
+                         <div className="w-8 h-8 rounded-full bg-muted"></div>
+                         <div className="w-8 h-8 rounded-full bg-muted"></div>
+                         <div className="w-8 h-8 rounded-full bg-muted"></div>
+                         <div className="flex items-center gap-1 w-28">
+                            <div className="w-8 h-8 rounded-full bg-muted"></div>
+                            <div className="h-1 bg-muted rounded flex-grow"></div>
+                         </div>
+                         <div className="w-8 h-8 rounded-full bg-muted"></div>
+                     </div>
+                </div>
+            </footer>
+       );
+  }
+
 
   return (
     // Updated background, border, padding to match Spotify footer
@@ -238,3 +296,4 @@ export default function AudioPlayer() {
     </footer>
   );
 }
+

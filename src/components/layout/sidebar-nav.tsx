@@ -1,11 +1,12 @@
+
 'use client';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Search, Library, PlusSquare, Heart } from 'lucide-react'; // Removed RadioTower
+import { Home, Search, Library, PlusSquare, Heart, type LucideIcon } from 'lucide-react'; // Use LucideIcon type
 import { SpotifyLogo } from '@/components/icons/spotify-logo'; // Import Spotify logo
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button'; // Import variants
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
@@ -38,54 +39,63 @@ const userPlaylists = [
     { id: 'pl11', name: 'Very Very Very Long Playlist Name Indeed Just to Test Wrapping' },
 ]
 
+// Define type for nav items
+interface NavItem {
+  href: string;
+  label: string;
+  icon: LucideIcon; // Use the specific type
+}
+
+
 export default function SidebarNav() {
   const pathname = usePathname();
 
-  const renderNavItem = (item: { href: string; label: string; icon: React.ElementType }, index: number, isLibraryItem: boolean = false) => {
+  const renderNavItem = (item: NavItem, index: number, isLibraryItem: boolean = false) => {
     const Icon = item.icon;
     const isActive = item.href === '/' ? pathname === item.href : pathname.startsWith(item.href) && item.href !== '/';
 
-    // Special handling for Library item actions
-    if (isLibraryItem) {
-        return (
-            <Link href={item.href} key={index} legacyBehavior passHref>
-                <Button
-                    variant="ghost"
-                    className={cn(
-                        'w-full justify-start text-sm font-medium h-8 px-2 rounded-sm gap-3', // Smaller height, padding, gap
-                        isActive ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'
-                    )}
-                    aria-current={isActive ? 'page' : undefined}
-                    title={item.label} // Tooltip for action item
-                >
-                    <div className={cn( // Container for icon with background
-                        "w-6 h-6 rounded-sm flex items-center justify-center flex-shrink-0",
-                         isActive || item.href === '/collection/tracks' // Liked songs has gradient bg
-                            ? 'bg-gradient-to-br from-purple-700 to-blue-400' // Example gradient
-                            : 'bg-muted-foreground/80' // Default background for icon
-                    )}>
-                       <Icon className="h-4 w-4 text-foreground" />
-                    </div>
-                    <span className="truncate">{item.label}</span>
-                </Button>
-            </Link>
+    // Base classes for the link (acting as a button)
+    const linkClasses = cn(
+      buttonVariants({ variant: 'ghost' }), // Apply button styles
+      'w-full justify-start rounded-sm gap-3', // Common layout styles
+      isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground' // Active/hover states
+    );
+
+    // Specific styles based on type (main nav vs library action)
+    const specificStyles = isLibraryItem
+      ? 'text-sm font-medium h-8 px-2' // Library action styles
+      : 'text-base font-bold h-10 px-3 gap-4'; // Main nav styles
+
+    const iconContainerStyles = isLibraryItem
+      ? cn(
+          "w-6 h-6 rounded-sm flex items-center justify-center flex-shrink-0",
+          isActive || item.href === '/collection/tracks' // Liked songs specific style
+            ? 'bg-gradient-to-br from-purple-700 to-blue-400' // Example gradient
+            : 'bg-muted-foreground/80' // Default icon background
         )
-    }
+      : ''; // No extra container for main nav icons
+
+    const iconStyles = isLibraryItem
+      ? 'h-4 w-4 text-foreground' // Library action icon size
+      : cn("h-6 w-6 flex-shrink-0", isActive && 'fill-current'); // Main nav icon size and fill
 
 
     return (
-      <Link href={item.href} key={index} legacyBehavior passHref>
-        <Button
-          variant="ghost"
-          className={cn(
-            'w-full justify-start text-base font-bold h-10 px-3 rounded-sm gap-4', // Spotify uses bolder font, adjusted padding/gap
-            isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground' // Removed background change on active, only text color
-          )}
-          aria-current={isActive ? 'page' : undefined}
-        >
-          <Icon className={cn("h-6 w-6 flex-shrink-0", isActive && 'fill-current')} /> {/* Fill icon if active */}
-          <span className="truncate">{item.label}</span>
-        </Button>
+      <Link
+        href={item.href}
+        key={index}
+        className={cn(linkClasses, specificStyles)}
+        aria-current={isActive ? 'page' : undefined}
+        title={isLibraryItem ? item.label : undefined} // Tooltip only for library actions
+      >
+        {isLibraryItem ? (
+            <div className={iconContainerStyles}>
+                <Icon className={iconStyles} />
+            </div>
+        ) : (
+            <Icon className={iconStyles} />
+        )}
+        <span className="truncate">{item.label}</span>
       </Link>
     );
   };
@@ -94,17 +104,17 @@ export default function SidebarNav() {
     const href = `/playlist/${playlist.id}`;
     const isActive = pathname === href;
     return (
-      <Link href={href} key={index} legacyBehavior passHref>
-        <a
-            className={cn(
-                'block w-full text-left text-sm font-medium h-8 px-3 rounded-sm truncate transition-colors', // Medium font weight, adjusted padding
-                isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground' // No background change on hover/active
-            )}
-             aria-current={isActive ? 'page' : undefined}
-             title={playlist.name}
-        >
-            {playlist.name}
-        </a>
+      <Link
+          href={href}
+          key={index}
+          className={cn(
+              'block w-full text-left text-sm font-medium h-8 px-3 rounded-sm truncate transition-colors', // Medium font weight, adjusted padding
+              isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground' // No background change on hover/active
+          )}
+          aria-current={isActive ? 'page' : undefined}
+          title={playlist.name}
+      >
+          {playlist.name}
       </Link>
     );
    }
