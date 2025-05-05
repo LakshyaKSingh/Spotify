@@ -1,3 +1,5 @@
+'use client';
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
@@ -5,8 +7,8 @@ import AudioPlayer from '@/components/layout/audio-player';
 import SidebarLayout from '@/components/layout/sidebar-layout';
 
 export const metadata: Metadata = {
-  title: 'Spotify - Web Player', // Updated title to match Spotify
-  description: 'Listen to millions of songs and podcasts for free.',
+  title: 'Spotify - Web Player: Music for everyone', // Updated title to match Spotify
+  description: 'Discover featured playlists, new releases, and trending music.',
 };
 
 // Define Spotify font family stack
@@ -36,3 +38,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+
