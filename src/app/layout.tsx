@@ -1,23 +1,16 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import AudioPlayer from '@/components/layout/audio-player';
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
+import SidebarLayout from '@/components/layout/sidebar-layout'; // Import the new layout component
 
 export const metadata: Metadata = {
-  title: 'MuseFlow',
-  description: 'Your personal Spotify clone powered by Firebase',
+  title: 'Spotify', // Change title to Spotify
+  description: 'Listen to millions of songs and podcasts for free.', // Update description
 };
+
+// Define Spotify font family stack
+const spotifyFontFamily = "'Circular Spotify Tx T', 'Circular Spotify Text', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'";
 
 export default function RootLayout({
   children,
@@ -26,10 +19,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}>
-        <div className="flex-grow pb-20"> {/* Add padding-bottom to prevent content overlap with player */}
-          <main>{children}</main>
-        </div>
+      {/* Apply Spotify font stack directly */}
+      <body className={`antialiased flex h-screen overflow-hidden`} style={{ fontFamily: spotifyFontFamily }}>
+        <SidebarLayout>
+            <div className="flex-grow overflow-y-auto scrollbar-thin"> {/* Make main content area scrollable */}
+               <main>{children}</main>
+            </div>
+        </SidebarLayout>
         <AudioPlayer />
         <Toaster />
       </body>

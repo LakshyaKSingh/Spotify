@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-const { fontFamily } = require("tailwindcss/defaultTheme") // Import defaultTheme
+// Removed defaultTheme import as we are not extending default sans/mono anymore
 
 export default {
     darkMode: ["class"],
@@ -10,10 +10,7 @@ export default {
   ],
   theme: {
   	extend: {
-        fontFamily: { // Add font family extension
-            sans: ["var(--font-geist-sans)", ...fontFamily.sans],
-            mono: ["var(--font-geist-mono)", ...fontFamily.mono],
-        },
+        // Removed fontFamily extension - font is set globally in layout.tsx
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -66,10 +63,10 @@ export default {
   				ring: 'hsl(var(--sidebar-ring))'
   			}
   		},
-  		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
+  		borderRadius: { // Keep adjusted border radius
+  			lg: 'var(--radius)', // Should be 0.25rem now from globals.css
+  			md: 'calc(var(--radius) - 1px)', // Adjust based on new radius
+  			sm: 'calc(var(--radius) - 2px)' // Adjust based on new radius
   		},
   		keyframes: {
   			'accordion-down': {

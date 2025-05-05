@@ -4,9 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import MusicGrid from '@/components/dashboard/music-grid';
+import Greeting from '@/components/dashboard/greeting'; // Import the Greeting component
 
 export const metadata: Metadata = {
-  title: 'MuseFlow - Dashboard',
+  title: 'Spotify - Web Player: Music for everyone', // Updated title
   description: 'Discover featured playlists, new releases, and trending music.',
 };
 
@@ -35,18 +36,10 @@ const trendingMusic = [
 
 export default function Home() {
   return (
-    <div className="container mx-auto py-8 px-4 md:px-8">
-      <header className="mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
-        <h1 className="text-3xl font-bold text-foreground">Welcome to MuseFlow</h1>
-        <div className="relative w-full md:w-1/3">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
-          <Input
-            type="search"
-            placeholder="Search songs, artists, playlists..."
-            className="pl-10 bg-card border-border focus:ring-accent"
-          />
-        </div>
-      </header>
+    // Removed container mx-auto for full width, adjusted padding
+    <div className="py-6 px-6 md:px-8">
+      {/* Removed header section, greeting handled by Greeting component */}
+       <Greeting />
 
       <section className="mb-12">
         <h2 className="text-2xl font-semibold mb-4 text-foreground">Featured Playlists</h2>

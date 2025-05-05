@@ -2,29 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 @layer base {
   .dark {
     --background: 0 0% 7%; /* #121212 */
-    --foreground: 0 0% 95%; /* Near white for readability */
-    --card: 0 0% 10%; /* Slightly lighter than background */
-    --card-foreground: 0 0% 95%;
+    --foreground: 0 0% 98%; /* White */
+    --card: 0 0% 10%; /* #1A1A1A */
+    --card-foreground: 0 0% 98%;
     --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 141 76% 42%; /* #1DB954 */
-    --primary-foreground: 0 0% 98%; /* White/Light text on primary */
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 95%;
-    --muted: 0 0% 15%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 141 76% 42%; /* #1DB954 - Spotify Green */
+    --primary-foreground: 0 0% 7%; /* Black/Dark text on primary */
+    --secondary: 0 0% 15%; /* #262626 */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 25%; /* #404040 */
     --muted-foreground: 0 0% 70%; /* #B3B3B3 */
     --accent: 141 76% 42%; /* #1DB954 */
-    --accent-foreground: 0 0% 98%;
+    --accent-foreground: 0 0% 7%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 18%;
+    --border: 0 0% 18%; /* #2E2E2E */
     --input: 0 0% 18%;
     --ring: 141 76% 42%; /* #1DB954 */
     --chart-1: 141 76% 42%; /* Green */
@@ -32,13 +28,13 @@ body {
     --chart-3: 0 0% 50%; /* Darker Gray */
     --chart-4: 141 76% 30%; /* Darker Green */
     --chart-5: 141 76% 55%; /* Lighter Green */
-    --radius: 0.5rem;
-    --sidebar-background: 0 0% 10%;
-    --sidebar-foreground: 0 0% 95%;
+    --radius: 0.25rem; /* Spotify uses less rounded corners */
+    --sidebar-background: 0 0% 0%; /* Black for sidebar */
+    --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 141 76% 42%; /* Green */
-    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-primary-foreground: 0 0% 7%;
     --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 0 0% 18%;
     --sidebar-ring: 141 76% 42%; /* Green */
   }
@@ -46,19 +42,19 @@ body {
   :root {
      /* Apply dark theme variables by default */
     --background: 0 0% 7%;
-    --foreground: 0 0% 95%;
+    --foreground: 0 0% 98%;
     --card: 0 0% 10%;
-    --card-foreground: 0 0% 95%;
+    --card-foreground: 0 0% 98%;
     --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 95%;
+    --popover-foreground: 0 0% 98%;
     --primary: 141 76% 42%;
-    --primary-foreground: 0 0% 98%;
+    --primary-foreground: 0 0% 7%;
     --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 95%;
-    --muted: 0 0% 15%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 25%;
     --muted-foreground: 0 0% 70%;
     --accent: 141 76% 42%;
-    --accent-foreground: 0 0% 98%;
+    --accent-foreground: 0 0% 7%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 18%;
@@ -69,13 +65,13 @@ body {
     --chart-3: 0 0% 50%;
     --chart-4: 141 76% 30%;
     --chart-5: 141 76% 55%;
-    --radius: 0.5rem;
-    --sidebar-background: 0 0% 10%;
-    --sidebar-foreground: 0 0% 95%;
+    --radius: 0.25rem;
+    --sidebar-background: 0 0% 0%; /* Black for sidebar */
+    --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 141 76% 42%;
-    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-primary-foreground: 0 0% 7%;
     --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 0 0% 18%;
     --sidebar-ring: 141 76% 42%;
   }
@@ -86,6 +82,42 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    /* Rely on font defined in layout.tsx */
+    @apply bg-background text-foreground font-sans; /* Ensure font-sans is applied */
   }
+}
+
+@layer utilities {
+    /* Custom scrollbar styles to match Spotify */
+    .scrollbar-thin {
+      scrollbar-width: thin;
+      scrollbar-color: hsl(var(--muted)) hsl(var(--background)); /* Thumb and track color */
+    }
+
+    .scrollbar-thin::-webkit-scrollbar {
+      width: 8px; /* Width of the scrollbar */
+      height: 8px; /* Height for horizontal scrollbar */
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: hsl(var(--background)); /* Color of the track */
+      border-radius: 4px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background-color: hsl(var(--muted)); /* Color of the thumb */
+      border-radius: 4px; /* Roundness of the thumb */
+      border: 2px solid hsl(var(--background)); /* Creates padding around thumb */
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+      background-color: hsl(var(--muted-foreground)); /* Slightly lighter on hover */
+    }
+
+    .scrollbar-none {
+      scrollbar-width: none; /* Firefox */
+    }
+    .scrollbar-none::-webkit-scrollbar {
+      display: none; /* Safari and Chrome */
+    }
 }
